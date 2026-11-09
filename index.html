@@ -125,6 +125,152 @@
             box-shadow: 0 8px 20px rgba(255, 77, 109, 0.6);
         }
 
+        /* ================= ESCENA 0: PASTEL DE CUMPLEAÑOS ================= */
+
+        #scene0 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            padding: 10px;
+            box-sizing: border-box;
+            transition: opacity 1s ease;
+        }
+
+        #fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cake-title {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            text-align: center;
+            font-family: 'Brush Script MT', 'Segoe Script', 'Lucida Handwriting', cursive;
+            font-size: clamp(2.6rem, 12vw, 4.4rem);
+            font-weight: normal;
+            line-height: 1.1;
+            background: linear-gradient(90deg, #ffb3c6, #ffd6a5, #fdffb6, #caffbf, #9bf6ff, #bdb2ff, #ffc6ff, #ffb3c6);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 0 10px rgba(255, 200, 230, 0.55));
+            animation: titleShine 6s linear infinite, titleIn 1.6s ease both;
+        }
+
+        .heart-btn {
+            position: relative;
+            z-index: 2;
+            width: 128px;
+            height: 116px;
+            margin: 6px 0 0;
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+            animation: heartBeat 1.4s ease-in-out infinite, titleIn 1.6s ease 0.5s both;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .heart-btn svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 6px 14px rgba(255, 143, 177, 0.6));
+        }
+
+        .heart-btn span {
+            position: relative;
+            display: block;
+            padding-bottom: 10px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            line-height: 1.15;
+            color: #fff;
+            text-shadow: 0 1px 4px rgba(150, 30, 80, 0.55);
+        }
+
+        .heart-btn:disabled {
+            cursor: default;
+            animation: none;
+        }
+
+        #cakeSvg {
+            position: relative;
+            z-index: 1;
+            width: min(82vw, 340px);
+            height: auto;
+            max-height: 46vh;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+            animation: cakeIn 1.6s cubic-bezier(0.2, 0.9, 0.3, 1.15) 0.2s both;
+        }
+
+        .flame {
+            transform-box: fill-box;
+            transform-origin: 50% 100%;
+            animation: flick 0.35s ease-in-out infinite alternate;
+        }
+        .flame.f2 { animation-delay: -0.17s; }
+
+        .flame-glow {
+            animation: glowPulse 0.9s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleShine {
+            to { background-position: 200% center; }
+        }
+        @keyframes titleIn {
+            from { opacity: 0; transform: translateY(-16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            15%      { transform: scale(1.1); }
+            30%      { transform: scale(1); }
+            45%      { transform: scale(1.07); }
+        }
+        @keyframes cakeIn {
+            from { opacity: 0; transform: translateY(50px) scale(0.9); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes flick {
+            from { transform: scale(1, 1) rotate(-3deg); }
+            to   { transform: scale(0.9, 1.14) rotate(3deg); }
+        }
+        @keyframes glowPulse {
+            from { opacity: 0.35; }
+            to   { opacity: 0.7; }
+        }
+
+        /* Lienzo de globos y confeti (transición) */
+        #celebrate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            pointer-events: none;
+        }
+
         /* ================= RAMO DE FLORES (ESCENA 2) ================= */
 
         .bouquet-title {
@@ -198,10 +344,6 @@
             animation: dotPop 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.5) both;
         }
 
-        @keyframes titleIn {
-            from { opacity: 0; transform: translateY(-18px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
         @keyframes glowIn {
             from { opacity: 0; transform: scale(0.4); }
             to   { opacity: 1; transform: scale(1); }
@@ -235,18 +377,114 @@
 
     <canvas id="particles"></canvas>
 
+    <!-- Escena 0: Pastel de cumpleaños -->
+    <div id="scene0">
+        <canvas id="fireworks"></canvas>
+        <h1 class="cake-title">Feliz Cumpleaños</h1>
+
+        <button class="heart-btn" id="readBtn" onclick="startCelebration()">
+            <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                    <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#ffb3cf"/>
+                        <stop offset="100%" stop-color="#f06aa5"/>
+                    </linearGradient>
+                </defs>
+                <path d="M50 88 C10 55 0 35 0 22 C0 8 12 0 26 0 C38 0 46 7 50 15 C54 7 62 0 74 0 C88 0 100 8 100 22 C100 35 90 55 50 88 Z" fill="url(#heartGrad)"/>
+            </svg>
+            <span>Leer tu<br>carta</span>
+        </button>
+
+        <svg id="cakeSvg" viewBox="0 0 300 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pastel de cumpleaños con vela del número 18">
+            <!-- Plato -->
+            <rect x="10" y="244" width="280" height="10" rx="5" fill="#fff8fb"/>
+
+            <!-- Capas del pastel -->
+            <rect x="45" y="150" width="210" height="48" rx="6" fill="#ffc8dd"/>
+            <rect x="45" y="198" width="210" height="9" fill="#fffafc"/>
+            <rect x="45" y="207" width="210" height="37" rx="6" fill="#cdb4f6"/>
+            <rect x="45" y="207" width="210" height="14" fill="#cdb4f6"/>
+
+            <!-- Betún con gotas -->
+            <path d="M42 150 Q42 138 56 138 H244 Q258 138 258 150 V162 Q258 174 249 174 Q240 174 240 162 V158 Q240 152 232 152 Q224 152 224 160 V176 Q224 188 214 188 Q204 188 204 176 V160 Q204 153 196 153 H116 Q108 153 108 160 V170 Q108 182 98 182 Q88 182 88 170 V162 Q88 154 80 154 Q72 154 72 162 V168 Q72 176 64 176 Q56 176 56 168 V164 Q42 164 42 150 Z" fill="#fffafc"/>
+
+            <!-- Chispas de colores sobre el betún -->
+            <g>
+                <circle cx="70" cy="145" r="2.6" fill="#ffb3c6"/>
+                <circle cx="92" cy="144" r="2.6" fill="#a0c4ff"/>
+                <circle cx="215" cy="145" r="2.6" fill="#caffbf"/>
+                <circle cx="238" cy="144" r="2.6" fill="#ffd6a5"/>
+                <circle cx="198" cy="147" r="2.2" fill="#bdb2ff"/>
+                <circle cx="108" cy="147" r="2.2" fill="#ffc6ff"/>
+            </g>
+
+            <!-- Perlitas en la base -->
+            <g>
+                <circle cx="62"  cy="238" r="4" fill="#fffafc"/>
+                <circle cx="88"  cy="238" r="4" fill="#ffd6e7"/>
+                <circle cx="114" cy="238" r="4" fill="#fffafc"/>
+                <circle cx="140" cy="238" r="4" fill="#ffd6e7"/>
+                <circle cx="166" cy="238" r="4" fill="#fffafc"/>
+                <circle cx="192" cy="238" r="4" fill="#ffd6e7"/>
+                <circle cx="218" cy="238" r="4" fill="#fffafc"/>
+                <circle cx="244" cy="238" r="4" fill="#ffd6e7"/>
+            </g>
+
+            <!-- Puntitos decorativos en la capa de abajo -->
+            <g fill="#f5eaff" opacity="0.8">
+                <circle cx="70"  cy="222" r="2.5"/>
+                <circle cx="110" cy="226" r="2.5"/>
+                <circle cx="150" cy="221" r="2.5"/>
+                <circle cx="190" cy="226" r="2.5"/>
+                <circle cx="230" cy="222" r="2.5"/>
+            </g>
+
+            <!-- Vela con el número 18 -->
+            <g>
+                <!-- Número 1 -->
+                <path d="M110 88 L126 77 V136" fill="none" stroke="#ffffff" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M110 88 L126 77 V136" fill="none" stroke="#a8e6cf" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Número 8 -->
+                <circle cx="174" cy="89" r="11" fill="none" stroke="#ffffff" stroke-width="15"/>
+                <circle cx="174" cy="119" r="14" fill="none" stroke="#ffffff" stroke-width="15"/>
+                <circle cx="174" cy="89" r="11" fill="none" stroke="#ffb3d1" stroke-width="9"/>
+                <circle cx="174" cy="119" r="14" fill="none" stroke="#ffb3d1" stroke-width="9"/>
+
+                <!-- Mechas -->
+                <path d="M126 74 V66" stroke="#8d6e63" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M174 73 V65" stroke="#8d6e63" stroke-width="2.5" stroke-linecap="round"/>
+
+                <!-- Brillo de las llamas -->
+                <circle class="flame-glow" cx="126" cy="56" r="17" fill="#fff0b3" opacity="0.5"/>
+                <circle class="flame-glow" cx="174" cy="55" r="17" fill="#fff0b3" opacity="0.5"/>
+
+                <!-- Llamas -->
+                <g transform="translate(126 66)">
+                    <path class="flame" d="M0 -22 C 9 -10 8 0 0 3 C -8 0 -9 -10 0 -22 Z" fill="#ffd98a"/>
+                    <path class="flame" d="M0 -12 C 4 -6 4 -1 0 1 C -4 -1 -4 -6 0 -12 Z" fill="#fff6d6"/>
+                </g>
+                <g transform="translate(174 65)">
+                    <path class="flame f2" d="M0 -22 C 9 -10 8 0 0 3 C -8 0 -9 -10 0 -22 Z" fill="#ffd98a"/>
+                    <path class="flame f2" d="M0 -12 C 4 -6 4 -1 0 1 C -4 -1 -4 -6 0 -12 Z" fill="#fff6d6"/>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <canvas id="celebrate"></canvas>
+
     <!-- Escena 1: Carta y Foto -->
-    <div id="scene1" class="scene">
+    <div id="scene1" class="scene" style="display:none; opacity:0;">
         <div class="card">
             <h1>Feliz Cumpleaños</h1>
             <div class="photo-container">
                 <img src="nuestra_foto.jpg" alt="Nosotros">
             </div>
             <p class="message">
-                Mi niña, aunque mañana no podamos vernos en persona, no quería que este día pasara sin darte un detalle. 
+                ✨Para La Cumpleañera Mas Linda, Maravillosa Y Unica En El Universo✨. 
                 <br><br>
                 Holaa corazón de melón, hoy es un dia especial para ti y tambien para mi, ya que un dia como hoy hace ya 18 años nacio una persona muy linda e increible, con la cual jamas habria imaginado todo lo que iba a vivir a su lado. gracias por ser parte de mis dias desde hace ya 4 años y hoy solo te puedo decir ¡¡MUCHAS FELICIDADES!!. Hoy te conviertes en una mujer, en la mujer mas maravillosa y de buen corazon que jamas he conocido, estoy muy orgulloso de ti por todo lo que haces siempre, por esa forma de pensar tan dedicada que tienes y por la persona que eres conmigo y con todos los que te amamos y te queremos. Estoy orgulloso de la mujer en la que te has convertido y yo se que puedes lograr todo lo que te propongas en la vida, me hubiera encantado ser parte de ella y aun no doy por perdida esa posibilidad, de cualquier forma siempre voy a estar para ti, para apoyarte en todo lo que necesites en cualquier momento sin importar nada y para verte triunfar en tus sueños y metas ya que es algo que siempre soñe ver y que yo se que eres capaz de lograr todo eso.
-Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar parte de mi vida en todos los aspectos. Hoy talvez no pueda estar ahi contigo fisicamente pero aunque de lejitos no queria dejar pasar el dia y esta fecha tan especial y esta es la unica manera de hacerte tu cartita, espero que te guste y que te la pases muy bien el dia de hoy, aunque sea en el trabajo espero que este pequeño detalle te logre sacar una sonrisa y alegrar un poquito mas tu dia. ¡¡¡FELICES 18 A LA CUMPLEAÑERA MAS LINDA E INCREIBLE DEL MUNDO!!!
+Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar parte de mi vida en todos los aspectos. Hoy talvez no pueda estar ahi contigo fisicamente pero aunque de lejitos no queria dejar pasar el dia y esta fecha tan especial y esta es la unica manera de hacerte tu cartita, espero que te guste y que te la pases muy bien el dia de hoy, aunque sea en el trabajo espero que este pequeño detalle te logre sacar una sonrisa y alegrar un poquito mas tu dia. ¡¡¡FELICES 18 A LA CUMPLEAÑERA MAS LINDA E INCREIBLE DEL MUNDO!!!💖🎉🎉
             </p>
             <button class="btn" onclick="revealFlowers()">Tengo algo más para ti...</button>
         </div>
@@ -259,6 +497,269 @@ Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar p
     </div>
 
     <script>
+        /* ---------- Transición: pastel -> globos y confeti -> carta ---------- */
+        const PASTEL = ['#ffb3c6', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
+        const rand = (a, b) => a + Math.random() * (b - a);
+        const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+        let celebrating = false;
+
+        function startCelebration() {
+            if (celebrating) return;
+            celebrating = true;
+            document.getElementById('readBtn').disabled = true;
+
+            launchCelebration();
+
+            // La escena del pastel se desvanece cuando ya hay globos y confeti en pantalla
+            setTimeout(() => {
+                document.getElementById('scene0').style.opacity = '0';
+            }, 1800);
+
+            // Aparece la carta
+            setTimeout(() => {
+                const scene0 = document.getElementById('scene0');
+                const scene1 = document.getElementById('scene1');
+                scene0.style.display = 'none';
+                fwRunning = false;
+                scene1.style.display = 'flex';
+                void scene1.offsetWidth; // fuerza el reflujo para que la transición se dispare
+                scene1.style.opacity = '1';
+                window.scrollTo(0, 0);
+            }, 2900);
+        }
+
+        /* ---------- Globos y confeti ---------- */
+        const cCanvas = document.getElementById('celebrate');
+        const cctx = cCanvas.getContext('2d');
+        let balloons = [];
+        let confetti = [];
+        let celebRunning = false;
+        let rainFrames = 0;
+
+        function resizeCelebrate() {
+            cCanvas.width = window.innerWidth;
+            cCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCelebrate);
+        resizeCelebrate();
+
+        function newConfetti(x, y, vx, vy) {
+            return {
+                x, y, vx, vy,
+                w: rand(6, 11), h: rand(3, 6),
+                rot: rand(0, Math.PI * 2),
+                vr: rand(-0.3, 0.3),
+                wob: rand(0, Math.PI * 2),
+                color: pick(PASTEL)
+            };
+        }
+
+        function launchCelebration() {
+            const W = cCanvas.width, H = cCanvas.height;
+            const count = W < 600 ? 18 : 28;
+
+            for (let i = 0; i < count; i++) {
+                balloons.push({
+                    x: rand(0.03, 0.97) * W,
+                    y: H + rand(40, H * 0.7),
+                    r: rand(26, 44),
+                    vy: rand(2.4, 4.6),
+                    sway: rand(8, 24),
+                    ph: rand(0, Math.PI * 2),
+                    sp: rand(0.02, 0.04),
+                    color: pick(PASTEL)
+                });
+            }
+
+            // Estallido de confeti desde las dos esquinas de abajo
+            for (let i = 0; i < 110; i++) {
+                confetti.push(newConfetti(0, H, rand(4, 13), -rand(9, 21)));
+                confetti.push(newConfetti(W, H, -rand(4, 13), -rand(9, 21)));
+            }
+            rainFrames = 150; // lluvia de confeti desde arriba
+
+            if (!celebRunning) {
+                celebRunning = true;
+                requestAnimationFrame(celebLoop);
+            }
+        }
+
+        function drawBalloon(b) {
+            const x = b.x + Math.sin(b.ph) * b.sway;
+            const rx = b.r * 0.84, ry = b.r * 1.05;
+
+            // Hilo
+            cctx.beginPath();
+            cctx.moveTo(x, b.y + ry + 6);
+            cctx.quadraticCurveTo(x + Math.sin(b.ph * 1.3) * 14, b.y + ry + 36, x, b.y + ry + 70);
+            cctx.strokeStyle = 'rgba(255,255,255,0.65)';
+            cctx.lineWidth = 1.4;
+            cctx.stroke();
+
+            // Nudo
+            cctx.beginPath();
+            cctx.moveTo(x, b.y + ry - 1);
+            cctx.lineTo(x - 5, b.y + ry + 7);
+            cctx.lineTo(x + 5, b.y + ry + 7);
+            cctx.closePath();
+            cctx.fillStyle = b.color;
+            cctx.fill();
+
+            // Cuerpo
+            cctx.beginPath();
+            cctx.ellipse(x, b.y, rx, ry, 0, 0, Math.PI * 2);
+            cctx.fillStyle = b.color;
+            cctx.fill();
+
+            // Sombra suave abajo-derecha
+            cctx.beginPath();
+            cctx.ellipse(x + rx * 0.25, b.y + ry * 0.25, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2);
+            cctx.fillStyle = 'rgba(255,255,255,0.10)';
+            cctx.fill();
+
+            // Brillo
+            cctx.beginPath();
+            cctx.ellipse(x - rx * 0.38, b.y - ry * 0.4, rx * 0.17, ry * 0.3, -0.5, 0, Math.PI * 2);
+            cctx.fillStyle = 'rgba(255,255,255,0.65)';
+            cctx.fill();
+        }
+
+        function celebLoop() {
+            const W = cCanvas.width, H = cCanvas.height;
+            cctx.clearRect(0, 0, W, H);
+
+            // Lluvia de confeti desde arriba al inicio
+            if (rainFrames > 0) {
+                rainFrames--;
+                for (let i = 0; i < 3; i++) {
+                    confetti.push(newConfetti(rand(0, W), -10, rand(-1.5, 1.5), rand(2, 5)));
+                }
+            }
+
+            // Globos
+            balloons.forEach(b => {
+                b.y -= b.vy;
+                b.ph += b.sp;
+                drawBalloon(b);
+            });
+            balloons = balloons.filter(b => b.y > -b.r * 3 - 90);
+
+            // Confeti
+            confetti.forEach(c => {
+                c.vy += 0.25;
+                c.vx *= 0.985;
+                c.vy *= 0.985;
+                c.x += c.vx + Math.sin(c.wob) * 0.8;
+                c.y += c.vy;
+                c.rot += c.vr;
+                c.wob += 0.12;
+
+                cctx.save();
+                cctx.translate(c.x, c.y);
+                cctx.rotate(c.rot);
+                cctx.scale(1, Math.abs(Math.cos(c.wob)) * 0.8 + 0.2);
+                cctx.fillStyle = c.color;
+                cctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+                cctx.restore();
+            });
+            confetti = confetti.filter(c => c.y < H + 30);
+
+            if (balloons.length || confetti.length || rainFrames > 0) {
+                requestAnimationFrame(celebLoop);
+            } else {
+                celebRunning = false;
+                cctx.clearRect(0, 0, W, H);
+            }
+        }
+
+        /* ---------- Fuegos artificiales de la escena del pastel ---------- */
+        const fwCanvas = document.getElementById('fireworks');
+        const fctx = fwCanvas.getContext('2d');
+        let fwW, fwH;
+        let rockets = [];
+        let sparks = [];
+        let fwRunning = true;
+        let fwTimer = 0;
+
+        function resizeFw() {
+            fwW = fwCanvas.width = window.innerWidth;
+            fwH = fwCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeFw);
+        resizeFw();
+
+        function launchRocket() {
+            rockets.push({
+                x: rand(0.1, 0.9) * fwW,
+                y: fwH,
+                ty: rand(0.12, 0.45) * fwH,
+                vy: -rand(6, 9) * (fwH / 700 + 0.4),
+                color: pick(PASTEL)
+            });
+        }
+
+        function explode(x, y, color) {
+            const n = Math.round(rand(34, 56));
+            const second = pick(PASTEL);
+            for (let i = 0; i < n; i++) {
+                const a = (i / n) * Math.PI * 2 + rand(-0.1, 0.1);
+                const sp = rand(1.5, 4.6);
+                sparks.push({
+                    x, y,
+                    vx: Math.cos(a) * sp,
+                    vy: Math.sin(a) * sp,
+                    life: 1,
+                    decay: rand(0.010, 0.022),
+                    size: rand(1.6, 3.2),
+                    color: i % 3 === 0 ? second : color
+                });
+            }
+        }
+
+        function fwLoop() {
+            if (!fwRunning) return;
+            fctx.clearRect(0, 0, fwW, fwH);
+
+            fwTimer--;
+            if (fwTimer <= 0) {
+                launchRocket();
+                fwTimer = Math.round(rand(35, 85));
+            }
+
+            rockets.forEach(r => {
+                r.y += r.vy;
+                r.vy *= 0.992;
+                fctx.beginPath();
+                fctx.arc(r.x, r.y, 2.4, 0, Math.PI * 2);
+                fctx.fillStyle = r.color;
+                fctx.fill();
+                if (r.y <= r.ty || r.vy > -1.5) {
+                    explode(r.x, r.y, r.color);
+                    r.dead = true;
+                }
+            });
+            rockets = rockets.filter(r => !r.dead);
+
+            sparks.forEach(s => {
+                s.vy += 0.035;
+                s.vx *= 0.99;
+                s.x += s.vx;
+                s.y += s.vy;
+                s.life -= s.decay;
+                fctx.globalAlpha = Math.max(s.life, 0);
+                fctx.beginPath();
+                fctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                fctx.fillStyle = s.color;
+                fctx.fill();
+            });
+            fctx.globalAlpha = 1;
+            sparks = sparks.filter(s => s.life > 0);
+
+            requestAnimationFrame(fwLoop);
+        }
+        fwLoop();
+
         /* ---------- Cambio de escena ---------- */
         function revealFlowers() {
             const scene1 = document.getElementById('scene1');
