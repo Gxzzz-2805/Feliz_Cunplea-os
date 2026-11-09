@@ -14,20 +14,20 @@
 
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-y: auto;
         }
 
         /* Lienzo de partículas de fondo */
         #particles {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -38,9 +38,8 @@
 
         /* Escenas */
         .scene {
-            position: absolute;
+            position: relative;
             width: 100%;
-            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -50,9 +49,14 @@
         }
 
         #scene2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
             opacity: 0;
             pointer-events: none;
             transform: scale(0.9);
+            justify-content: center;
         }
 
         /* Tarjeta de la carta */
@@ -63,9 +67,10 @@
             border-radius: 20px;
             padding: 30px;
             width: 85%;
-            max-width: 400px;
+            max-width: 500px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin: 20px auto;
         }
 
         .photo-container {
@@ -96,6 +101,7 @@
             line-height: 1.6;
             margin-bottom: 30px;
             color: #e0e0e0;
+            text-align: justify;
         }
 
         .btn {
@@ -108,6 +114,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            margin-bottom: 10px;
         }
 
         .btn:hover {
@@ -130,11 +137,8 @@
             transform-origin: bottom center;
         }
 
-        /* Flor Central */
         .f-center { transform: translateX(-50%) scale(1); z-index: 3; }
-        /* Flor Izquierda */
         .f-left { transform: translateX(-50%) rotate(-25deg) scale(0.85); z-index: 2; left: 30%; }
-        /* Flor Derecha */
         .f-right { transform: translateX(-50%) rotate(25deg) scale(0.85); z-index: 2; left: 70%; }
 
         .stem {
@@ -190,14 +194,13 @@
             color: #ff758f;
             text-shadow: 0 0 10px rgba(255, 117, 143, 0.5);
             opacity: 0;
-            transition: opacity 2s 1s ease; /* Aparece después de las flores */
+            transition: opacity 2s 1s ease;
         }
 
         #scene2.active .bouquet-text {
             opacity: 1;
         }
 
-        /* Animación para que las flores "crezcan" */
         .grow-anim {
             height: 0;
             overflow: hidden;
@@ -212,7 +215,6 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-
     </style>
 </head>
 <body>
@@ -224,14 +226,13 @@
         <div class="card">
             <h1>Feliz Cumpleaños</h1>
             <div class="photo-container">
-                <!-- COLOCA EL NOMBRE DE TU FOTO AQUÍ -->
                 <img src="nuestra_foto.jpg" alt="Nosotros">
             </div>
             <p class="message">
-                Para la persona mas importante y especial en mi vida, un pequeño detalle de alguien que te quiere mas de lo que te imaginas. 
+                Mi niña, aunque mañana no podamos vernos en persona, no quería que este día pasara sin darte un detalle. 
                 <br><br>
                 Holaa corazón de melón, hoy es un dia especial para ti y tambien para mi, ya que un dia como hoy hace ya 18 años nacio una persona muy linda e increible, con la cual jamas habria imaginado todo lo que iba a vivir a su lado. gracias por ser parte de mis dias desde hace ya 4 años y hoy solo te puedo decir ¡¡MUCHAS FELICIDADES!!. Hoy te conviertes en una mujer, en la mujer mas maravillosa y de buen corazon que jamas he conocido, estoy muy orgulloso de ti por todo lo que haces siempre, por esa forma de pensar tan dedicada que tienes y por la persona que eres conmigo y con todos los que te amamos y te queremos. Estoy orgulloso de la mujer en la que te has convertido y yo se que puedes lograr todo lo que te propongas en la vida, me hubiera encantado ser parte de ella y aun no doy por perdida esa posibilidad, de cualquier forma siempre voy a estar para ti, para apoyarte en todo lo que necesites en cualquier momento sin importar nada y para verte triunfar en tus sueños y metas ya que es algo que siempre soñe ver y que yo se que eres capaz de lograr todo eso.
-Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar parte de mi vida en todos los aspectos. Hoy talvez no pueda estar ahi contigo fisicamente pero aunque de lejitos no queria dejar pasar el dia y esta fecha tan especial y esta es la unica manera de hacerte tu cartita, espero que te guste y que te la pases muy bien el dia de hoy, aunque sea en el trabajo espero que este pequeño detalle te logre sacar una sonrisa y alegrar un poquito mas tu dia. ¡¡¡FELICES 18 A LA CUMPLEAÑERA MAS LINDA E INCREIBLE DEL MUNDO!!!.
+Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar parte de mi vida en todos los aspectos. Hoy talvez no pueda estar ahi contigo fisicamente pero aunque de lejitos no queria dejar pasar el dia y esta fecha tan especial y esta es la unica manera de hacerte tu cartita, espero que te guste y que te la pases muy bien el dia de hoy, aunque sea en el trabajo espero que este pequeño detalle te logre sacar una sonrisa y alegrar un poquito mas tu dia. ¡¡¡FELICES 18 A LA CUMPLEAÑERA MAS LINDA E INCREIBLE DEL MUNDO!!!
             </p>
             <button class="btn" onclick="revealFlowers()">Tengo algo más para ti...</button>
         </div>
@@ -240,7 +241,6 @@ Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar p
     <!-- Escena 2: Ramo de flores animado -->
     <div id="scene2" class="scene">
         <div class="bouquet grow-anim">
-            <!-- Flor Izquierda -->
             <div class="flower-wrapper f-left">
                 <div class="flower-head">
                     <div class="petal p1"></div>
@@ -252,7 +252,6 @@ Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar p
                 </div>
             </div>
 
-            <!-- Flor Derecha -->
             <div class="flower-wrapper f-right">
                 <div class="flower-head">
                     <div class="petal p1"></div>
@@ -264,7 +263,6 @@ Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar p
                 </div>
             </div>
 
-            <!-- Flor Central -->
             <div class="flower-wrapper f-center">
                 <div class="flower-head">
                     <div class="petal p1"></div>
@@ -282,7 +280,6 @@ Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar p
     </div>
 
     <script>
-        // Función para cambiar de escena
         function revealFlowers() {
             const scene1 = document.getElementById('scene1');
             const scene2 = document.getElementById('scene2');
@@ -297,7 +294,6 @@ Muchas muchas felicidades mi niña, te quiero mil millones y gracias por fomar p
             }, 1000);
         }
 
-        // Sistema de partículas de luz (luces flotantes románticas)
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         let width, height;
